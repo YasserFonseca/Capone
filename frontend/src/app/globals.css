@@ -1,0 +1,72 @@
+:root {
+  --background: #0d0912;
+  --foreground: #f0f0f0;
+  --primary: #5a189a;
+  --primary-hover: #7b2cbf;
+  --primary-dark: #3c096c;
+  --surface: #1a1224;
+  --surface-hover: #261a35;
+  --border: #3c2459;
+  --border-light: #523178;
+  --text-muted: #a496b8;
+  --success: #2d6a4f;
+  --shadow-color: rgba(90, 24, 154, 0.2);
+}
+
+@font-face {
+  font-family: 'Godfather';
+  src: url('/fonts/Corleone-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-league-spartan), sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-black-mango), serif;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Micro-animations and utility classes */
+.fade-in {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #9d4edd, #c77dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
