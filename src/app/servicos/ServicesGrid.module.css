@@ -1,0 +1,142 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.title {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.serviceRow {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 3rem;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.serviceRow:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 40px rgba(90, 24, 154, 0.2);
+  border-color: var(--primary);
+}
+
+.serviceRow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(199, 125, 255, 0.1) 0%, transparent 70%);
+  transform: translate(50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.iconContainer {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(90, 24, 154, 0.3);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.serviceRow:hover .iconContainer {
+  transform: rotate(10deg) scale(1.1);
+}
+
+.content {
+  flex-grow: 1;
+}
+
+.serviceTitle {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.serviceDesc {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.featureTag {
+  background-color: rgba(90, 24, 154, 0.2);
+  color: #c77dff;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid rgba(199, 125, 255, 0.3);
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary);
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.ctaButton:hover {
+  background-color: var(--primary-hover);
+  transform: translateX(5px);
+}
+
+@media (max-width: 900px) {
+  .serviceRow {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+    padding: 2rem;
+  }
+  .features {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,255 @@
+/* ── Hero ── */
+.hero {
+  padding: 8rem 2rem 4rem;
+  text-align: center;
+  background: radial-gradient(circle at top center, rgba(157, 78, 221, 0.1), transparent 70%);
+  border-bottom: 1px solid var(--border);
+}
+.heroTitle    { font-size: 3.5rem; margin-bottom: 1rem; }
+.heroSubtitle { color: var(--text-muted); font-size: 1.25rem; max-width: 800px; margin: 0 auto 2rem; line-height: 1.6; }
+
+/* ── Two-column layout ── */
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+/* ── Info section (left) ── */
+.infoSection h2    { font-size: 2rem; margin-bottom: 2rem; }
+.featureList       { display: flex; flex-direction: column; gap: 1.5rem; }
+.featureItem       { display: flex; align-items: flex-start; gap: 1rem; }
+.featureIcon       { color: var(--primary); background: rgba(90,24,154,0.2); padding: 0.5rem; border-radius: 8px; flex-shrink: 0; }
+.featureText h3    { font-size: 1.2rem; margin-bottom: 0.5rem; font-family: var(--font-league-spartan); }
+.featureText p     { color: var(--text-muted); line-height: 1.5; }
+
+/* ── Form card (right) ── */
+.formSection {
+  background: rgba(26, 18, 36, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+.formSection > h3  { font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; }
+.formIntro         { color: var(--text-muted); font-size: 0.9rem; text-align: center; margin-bottom: 2rem; }
+
+/* ── Section blocks inside the form ── */
+.sectionBlock {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  background: rgba(0,0,0,0.15);
+}
+.sectionTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 1.25rem;
+}
+
+/* ── Basic fields ── */
+.formGroup         { margin-bottom: 1.1rem; }
+.formGroup:last-child { margin-bottom: 0; }
+.label             { display: block; margin-bottom: 0.4rem; font-weight: 500; color: #fff; font-size: 0.9rem; }
+
+.input, .textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.input:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(90,24,154,0.25);
+}
+.textarea { min-height: 80px; resize: vertical; }
+
+/* ── Hours grid ── */
+.hoursGrid  { display: flex; flex-direction: column; gap: 0.6rem; }
+.hoursRow   { display: grid; grid-template-columns: minmax(0, 1fr) 82px 24px 82px; align-items: center; gap: 0.5rem; }
+
+.dayToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  min-width: 140px;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  font-family: inherit;
+}
+.dayToggle input[type="checkbox"] { display: none; }
+.toggleTrack {
+  width: 34px; height: 18px;
+  background: var(--border);
+  border-radius: 9px;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 0.2s;
+}
+.toggleTrack.on { background: var(--primary); }
+.toggleThumb {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  transition: left 0.2s;
+}
+.toggleTrack.on .toggleThumb { left: 18px; }
+.dayLabel { font-size: 0.85rem; color: var(--text-muted); }
+.dayLabel.open { color: #fff; }
+
+.timeInput {
+  padding: 0.45rem 0.6rem;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-family: inherit;
+  width: 80px;
+}
+.timeInput:focus   { outline: none; border-color: var(--primary); }
+.timeInput:disabled { opacity: 0.35; cursor: not-allowed; }
+.timeSep { color: var(--text-muted); font-size: 0.8rem; text-align: center; white-space: nowrap; }
+
+/* ── Services table ── */
+.servicesHeader {
+  display: grid;
+  grid-template-columns: 1fr 90px 100px 32px;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.servicesHeader span { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.04em; }
+
+.serviceRow {
+  display: grid;
+  grid-template-columns: 1fr 90px 100px 32px;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+.smallInput {
+  padding: 0.5rem 0.65rem;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.875rem;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+.smallInput:focus { outline: none; border-color: var(--primary); }
+
+.durationSelect {
+  padding: 0.5rem 0.4rem;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.875rem;
+  font-family: inherit;
+  width: 100%;
+  cursor: pointer;
+}
+.durationSelect:focus { outline: none; border-color: var(--primary); }
+.durationSelect option { background: #1a1224; }
+
+/* ── Professionals list ── */
+.profRow {
+  display: grid;
+  grid-template-columns: 1fr 32px;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+/* ── Icon buttons (add / remove) ── */
+.removeBtn {
+  width: 32px; height: 32px;
+  background: rgba(255,77,77,0.1);
+  border: 1px solid rgba(255,77,77,0.3);
+  border-radius: 6px;
+  color: #ff4d4d;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.removeBtn:hover { background: rgba(255,77,77,0.25); }
+.removeBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.addRowBtn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  background: rgba(157,78,221,0.1);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  color: var(--primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+.addRowBtn:hover { background: rgba(157,78,221,0.2); border-color: var(--primary); }
+
+/* ── Error / submit ── */
+.errorBanner {
+  background: rgba(255,77,77,0.1);
+  border: 1px solid #ff4d4d;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  color: #ff4d4d;
+  font-size: 0.9rem;
+}
+.errorText  { color: #ff4d4d; font-size: 0.875rem; margin-top: 0.4rem; display: block; }
+
+.submitBtn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(90deg, #9d4edd, #c77dff);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  display: flex; justify-content: center; align-items: center; gap: 0.5rem;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.submitBtn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+.submitBtn:disabled { background: var(--surface-hover); color: var(--text-muted); cursor: not-allowed; transform: none; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .mainContent { grid-template-columns: 1fr; }
+  .heroTitle   { font-size: 2.5rem; }
+}
+@media (max-width: 480px) {
+  .servicesHeader, .serviceRow { grid-template-columns: 1fr 75px 85px 32px; }
+  .hoursRow  { grid-template-columns: minmax(0, 1fr) 70px 20px 70px; }
+  .timeInput { width: 70px; }
+}

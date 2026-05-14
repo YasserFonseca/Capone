@@ -1,0 +1,172 @@
+.catalog {
+  padding: 6rem 4rem;
+  background-color: var(--surface);
+  position: relative;
+}
+
+.catalog::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at top right, rgba(157, 78, 221, 0.05), transparent 50%),
+              radial-gradient(circle at bottom left, rgba(90, 24, 154, 0.05), transparent 50%);
+  pointer-events: none;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: rgba(26, 18, 36, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 2.5rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Custom Grid for 5 items: first row has 2 items, second row has 3 items */
+.card:nth-child(1), .card:nth-child(2) {
+  grid-column: span 3;
+}
+.card:nth-child(3), .card:nth-child(4), .card:nth-child(5) {
+  grid-column: span 2;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-hover));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.card:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(90, 24, 154, 0.2), 0 0 20px rgba(157, 78, 221, 0.2) inset;
+  border-color: rgba(199, 125, 255, 0.3);
+  background: rgba(38, 26, 53, 0.8);
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+.iconWrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(90, 24, 154, 0.2), rgba(157, 78, 221, 0.1));
+  border: 1px solid rgba(199, 125, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  color: #c77dff;
+  transition: all 0.4s ease;
+}
+
+.card:hover .iconWrapper {
+  transform: scale(1.1);
+  background-color: var(--primary);
+  color: #fff;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.cardDesc {
+  color: var(--text-muted);
+  flex-grow: 1;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.cardLink {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  box-shadow: 0 5px 15px rgba(90, 24, 154, 0.3);
+}
+
+.card:hover .cardLink {
+  gap: 0.8rem;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(90, 24, 154, 0.5);
+  background: linear-gradient(135deg, var(--primary-hover), var(--primary));
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .card:nth-child(n) {
+    grid-column: span 1;
+  }
+  .card:nth-child(5) {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .catalog {
+    padding: 4rem 2rem;
+  }
+  .title {
+    font-size: 2.5rem;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .card:nth-child(n) {
+    grid-column: span 1;
+  }
+}

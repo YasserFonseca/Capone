@@ -1,0 +1,73 @@
+import Link from 'next/link';
+import { Diamond } from 'lucide-react';
+import styles from './Footer.module.css';
+
+// Links sem página real ficam como span para não gerar 404
+function ComingSoon({ children }: { children: React.ReactNode }) {
+  return (
+    <span className={styles.linkDisabled} title="Em breve">
+      {children}
+    </span>
+  );
+}
+
+export default function Footer() {
+  return (
+    <footer className={styles.footer}>
+      <div className={styles.container}>
+
+        <div className={styles.brand}>
+          <div className={styles.logo}>
+            <Diamond className={styles.logoIcon} size={24} color="var(--primary)" /> CAPONE
+          </div>
+          <p className={styles.description}>
+            Transformando o atendimento de negócios através de automações inteligentes e CRMs otimizados.
+          </p>
+          <div className={styles.social}>
+            <a href="#" className={styles.socialLink} aria-label="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="#" className={styles.socialLink} aria-label="LinkedIn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div className={styles.column}>
+          <h4 className={styles.colTitle}>Soluções</h4>
+          <nav className={styles.linkList}>
+            <Link href="/servicos/odontologia" className={styles.link}>Clínica de Odontologia</Link>
+            <Link href="/servicos/barbearia"   className={styles.link}>Barbearia</Link>
+            <Link href="/servicos/petshop"     className={styles.link}>Pet Shop</Link>
+            <Link href="/servicos/advocacia"   className={styles.link}>Advocacia</Link>
+            <Link href="/servicos/psicologia"  className={styles.link}>Psicologia</Link>
+          </nav>
+        </div>
+
+        <div className={styles.column}>
+          <h4 className={styles.colTitle}>Empresa</h4>
+          <nav className={styles.linkList}>
+            <Link href="/sobre"   className={styles.link}>Sobre Nós</Link>
+            <Link href="/contato" className={styles.link}>Contato</Link>
+            <ComingSoon>Casos de Sucesso</ComingSoon>
+            <ComingSoon>Carreiras</ComingSoon>
+          </nav>
+        </div>
+
+        <div className={styles.column}>
+          <h4 className={styles.colTitle}>Suporte</h4>
+          <nav className={styles.linkList}>
+            <Link href="/contato" className={styles.link}>Central de Ajuda</Link>
+            <ComingSoon>FAQ</ComingSoon>
+            <ComingSoon>Política de Privacidade</ComingSoon>
+            <ComingSoon>Termos de Serviço</ComingSoon>
+          </nav>
+        </div>
+      </div>
+
+      <div className={styles.bottom}>
+        <p>&copy; {new Date().getFullYear()} Capone Automações. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+  );
+}
