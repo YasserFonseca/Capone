@@ -1,7 +1,7 @@
 import styles from '../AdminDashboard.module.css'
 import tableStyles from '../../../components/admin/TenantsTable.module.css'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 const check = (val: string | undefined) => val ? '✓ Definida' : '✗ Faltando'
 const checkColor = (val: string | undefined): string => val ? '#4ade80' : '#f87171'
@@ -32,7 +32,7 @@ export default function AdminConfigPage() {
           <div style={{ fontSize: '13px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div style={{ display: 'flex', gap: '12px' }}>
               <span style={{ color: 'var(--text-muted)', minWidth: '100px' }}>Email</span>
-              <span>admin@capone.com.br</span>
+              <span>{process.env.ADMIN_EMAIL ?? 'admin@capone.com.br'}</span>
             </div>
             <div style={{ display: 'flex', gap: '12px' }}>
               <span style={{ color: 'var(--text-muted)', minWidth: '100px' }}>Acesso</span>
@@ -40,7 +40,7 @@ export default function AdminConfigPage() {
             </div>
             <div style={{ display: 'flex', gap: '12px' }}>
               <span style={{ color: 'var(--text-muted)', minWidth: '100px' }}>Projeto</span>
-              <span>ucfnhmpilohwkdjibczs.supabase.co</span>
+              <span>{(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').replace('https://', '').split('.')[0] || '—'}</span>
             </div>
           </div>
         </div>

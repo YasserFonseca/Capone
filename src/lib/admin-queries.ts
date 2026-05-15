@@ -136,7 +136,7 @@ export async function getWhatsappInstances(): Promise<WhatsappInstance[]> {
   const { data, error } = await supabaseAdmin
     .from('whatsapp_instances')
     .select('*, tenants(company_name, owner_email)')
-    .order('created_at', { ascending: false })
+    .order('connected_at', { ascending: false, nullsFirst: false })
 
   if (error) { console.error('[getWhatsappInstances]', error); return [] }
   return data as WhatsappInstance[]
@@ -159,7 +159,7 @@ export async function getConversations(limit = 50): Promise<Conversation[]> {
   const { data, error } = await supabaseAdmin
     .from('conversations')
     .select('*, tenants(company_name)')
-    .order('created_at', { ascending: false })
+    .order('last_message_at', { ascending: false, nullsFirst: false })
     .limit(limit)
 
   if (error) { console.error('[getConversations]', error); return [] }
@@ -171,7 +171,7 @@ export async function getSegments(): Promise<Segment[]> {
   const { data, error } = await supabaseAdmin
     .from('segments')
     .select('*')
-    .order('created_at', { ascending: true })
+    .order('name', { ascending: true })
 
   if (error) { console.error('[getSegments]', error); return [] }
   return data as Segment[]

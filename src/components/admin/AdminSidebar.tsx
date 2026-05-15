@@ -1,10 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard, Users, DollarSign, Wifi,
-  Calendar, MessageSquare, Grid, Settings, LogOut
+  Calendar, MessageSquare, Grid, Settings, LogOut, Menu, X
 } from 'lucide-react'
 import styles from './AdminSidebar.module.css'
 import { supabase } from '@/lib/supabase'
@@ -27,16 +28,30 @@ const NAV = [
 ]
 
 export function AdminSidebar() {
-  const pathname = usePathname()
-  const router   = useRouter()
+  const pathname    = usePathname()
+  const router      = useRouter()
+  const [open, setOpen] = useState(false)
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push('/')
   }
 
+  const close = () => setOpen(false)
+
   return (
-    <aside className={styles.sidebar}>
+    <>
+      <button
+        className={styles.mobileToggle}
+        onClick={() => setOpen(prev => !prev)}
+        aria-label={open ? 'Fechar menu' : 'Abrir menu'}
+      >
+        {open ? <X size={18} /> : <Menu size={18} />}
+      </button>
+
+      {open && <div className={styles.overlay} onClick={close} />}
+
+    <aside className={`${styles.sidebar} ${open ? styles.open : ''}`}>
       <div className={styles.logo}>
         <span className={styles.logoDot} />
         <span className={styles.logoText}>CAPONE</span>
@@ -56,6 +71,7 @@ export function AdminSidebar() {
                   key={item.href}
                   href={item.href}
                   className={`${styles.navItem} ${isActive ? styles.active : ''}`}
+                  onClick={close}
                 >
                   <item.icon size={16} />
                   {item.label}
@@ -73,5 +89,6 @@ export function AdminSidebar() {
         </button>
       </div>
     </aside>
+    </>
   )
 }

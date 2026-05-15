@@ -5,7 +5,7 @@ import { MessageSquare, Users } from 'lucide-react'
 import styles from '../AdminDashboard.module.css'
 import tableStyles from '../../../components/admin/TenantsTable.module.css'
 
-export const revalidate = 30
+export const dynamic = 'force-dynamic'
 
 export default async function AdminConversasPage() {
   const conversations = await getConversations(100)

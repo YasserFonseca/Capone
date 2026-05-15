@@ -121,22 +121,15 @@
 }
 
 @media (max-width: 992px) {
-  .container {
-    grid-template-columns: 1fr 1fr;
-  }
+  .container { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .footer    { padding: 3rem 2rem 2rem; }
+  .legalLinks { flex-direction: column; gap: 0.75rem; align-items: center; }
 }
 
 @media (max-width: 576px) {
-  .footer {
-    padding: 3rem 2rem 2rem;
-  }
-  .container {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-  .bottom {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
+  .container { grid-template-columns: 1fr; gap: 3rem; }
+  .bottom    { flex-direction: column; gap: 1rem; text-align: center; }
 }

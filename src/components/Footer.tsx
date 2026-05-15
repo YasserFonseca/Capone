@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { Diamond } from 'lucide-react';
 import styles from './Footer.module.css';
 
-// Links sem página real ficam como span para não gerar 404
 function ComingSoon({ children }: { children: React.ReactNode }) {
   return (
     <span className={styles.linkDisabled} title="Em breve">
@@ -10,6 +9,15 @@ function ComingSoon({ children }: { children: React.ReactNode }) {
     </span>
   );
 }
+
+const SEGMENT_LINKS = [
+  { name: 'Clínica de Odontologia', route_id: 'odontologia' },
+  { name: 'Barbearia',              route_id: 'barbearia'   },
+  { name: 'Pet Shop',               route_id: 'petshop'     },
+  { name: 'Advocacia',              route_id: 'advocacia'   },
+  { name: 'Psicologia',             route_id: 'psicologia'  },
+  { name: 'Salão de Beleza',        route_id: 'salao'       },
+]
 
 export default function Footer() {
   return (
@@ -36,11 +44,11 @@ export default function Footer() {
         <div className={styles.column}>
           <h4 className={styles.colTitle}>Soluções</h4>
           <nav className={styles.linkList}>
-            <Link href="/servicos/odontologia" className={styles.link}>Clínica de Odontologia</Link>
-            <Link href="/servicos/barbearia"   className={styles.link}>Barbearia</Link>
-            <Link href="/servicos/petshop"     className={styles.link}>Pet Shop</Link>
-            <Link href="/servicos/advocacia"   className={styles.link}>Advocacia</Link>
-            <Link href="/servicos/psicologia"  className={styles.link}>Psicologia</Link>
+            {SEGMENT_LINKS.map(seg => (
+              <Link key={seg.route_id} href={`/servicos/${seg.route_id}`} className={styles.link}>
+                {seg.name}
+              </Link>
+            ))}
           </nav>
         </div>
 

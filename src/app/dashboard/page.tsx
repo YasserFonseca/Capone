@@ -32,13 +32,17 @@ export default function DashboardPage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { router.push('/login'); return; }
 
-      setUserName(session.user.user_metadata?.full_name ?? session.user.email ?? '');
+      const u = session.user
+      const isAdmin = u.user_metadata?.is_admin === true || u.app_metadata?.is_admin === true
+      if (isAdmin) { router.replace('/admin'); return; }
+
+      setUserName(u.user_metadata?.full_name ?? u.email ?? '');
 
       // Busca o tenant do usuário
       const { data: tenant } = await supabase
         .from('tenants')
         .select('id')
-        .eq('owner_email', session.user.email)
+        .eq('owner_email', u.email)
         .eq('status', 'active')
         .single();
 

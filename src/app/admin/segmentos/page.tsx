@@ -4,7 +4,7 @@ import { SegmentToggle } from './SegmentToggle'
 import styles from '../AdminDashboard.module.css'
 import tableStyles from '../../../components/admin/TenantsTable.module.css'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 export default async function AdminSegmentosPage() {
   const segments = await getSegments()

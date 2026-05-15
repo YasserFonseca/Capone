@@ -35,7 +35,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -56,13 +56,6 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* Custom Grid for 5 items: first row has 2 items, second row has 3 items */
-.card:nth-child(1), .card:nth-child(2) {
-  grid-column: span 3;
-}
-.card:nth-child(3), .card:nth-child(4), .card:nth-child(5) {
-  grid-column: span 2;
-}
 
 .card::before {
   content: '';
@@ -145,28 +138,21 @@
 }
 
 @media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .card:nth-child(n) {
-    grid-column: span 1;
-  }
-  .card:nth-child(5) {
-    grid-column: span 2;
-  }
+  .catalog { padding: 5rem 2.5rem; }
+  .grid    { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
-  .catalog {
-    padding: 4rem 2rem;
-  }
-  .title {
-    font-size: 2.5rem;
-  }
-  .grid {
-    grid-template-columns: 1fr;
-  }
-  .card:nth-child(n) {
-    grid-column: span 1;
-  }
+  .catalog { padding: 4rem 2rem; }
+  .title   { font-size: 2.5rem; }
+  .grid    { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .catalog       { padding: 3rem 1.5rem; }
+  .title         { font-size: 2rem; }
+  .header        { margin-bottom: 2.5rem; }
+  .card          { padding: 1.75rem; }
+  .iconWrapper   { width: 56px; height: 56px; margin-bottom: 1.25rem; }
+  .cardTitle     { font-size: 1.25rem; }
 }

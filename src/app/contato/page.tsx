@@ -35,7 +35,7 @@ export default function ContatoPage() {
                 </div>
                 <div className={styles.infoText}>
                   <h3>E-mail</h3>
-                  <p>contato@caponeautomacoes.com</p>
+                  <p>{process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'contato@caponeautomacoes.com'}</p>
                 </div>
               </div>
 
@@ -45,7 +45,7 @@ export default function ContatoPage() {
                 </div>
                 <div className={styles.infoText}>
                   <h3>Telefone / WhatsApp</h3>
-                  <p>(11) 98765-4321</p>
+                  <p>{process.env.NEXT_PUBLIC_CONTACT_PHONE ?? '(11) 98765-4321'}</p>
                 </div>
               </div>
 

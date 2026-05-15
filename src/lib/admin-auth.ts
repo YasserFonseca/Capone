@@ -17,7 +17,8 @@ export async function checkAdminAuth() {
 
   if (!session) redirect('/login')
 
-  if (session.user.user_metadata?.is_admin !== true) redirect('/')
+  const isAdmin = session.user.user_metadata?.is_admin === true || session.user.app_metadata?.is_admin === true
+  if (!isAdmin) redirect('/')
 
   return session
 }

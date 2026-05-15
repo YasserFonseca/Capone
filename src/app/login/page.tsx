@@ -33,12 +33,14 @@ export default function LoginPage() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email:    formData.email,
         password: formData.password,
       });
       if (error) throw error;
-      router.push('/dashboard');
+      const u = data.session?.user
+      const isAdmin = u?.user_metadata?.is_admin === true || u?.app_metadata?.is_admin === true
+      router.push(isAdmin ? '/admin' : '/dashboard');
     } catch {
       setErrors(prev => ({ ...prev, general: 'E-mail ou senha incorretos.' }));
     } finally {

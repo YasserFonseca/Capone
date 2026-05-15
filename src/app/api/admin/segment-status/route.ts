@@ -14,7 +14,8 @@ export async function PATCH(req: NextRequest) {
     const { data: { session } } = await supabase.auth.getSession()
 
     if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
-    if (session.user.user_metadata?.is_admin !== true) {
+    const isAdmin = session.user.user_metadata?.is_admin === true || session.user.app_metadata?.is_admin === true
+    if (!isAdmin) {
       return NextResponse.json({ error: 'Acesso negado' }, { status: 403 })
     }
 

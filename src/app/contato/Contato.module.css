@@ -128,8 +128,14 @@
 }
 
 @media (max-width: 768px) {
-  .content {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
+  .content   { grid-template-columns: 1fr; gap: 2rem; }
+  .container { padding: 4rem 1.5rem; }
+  .title     { font-size: 2.2rem; }
+}
+
+@media (max-width: 480px) {
+  .container    { padding: 3rem 1rem; }
+  .title        { font-size: 1.8rem; }
+  .formSection  { padding: 1.75rem 1.25rem; }
+  .infoCard     { padding: 1.5rem 1rem; }
 }

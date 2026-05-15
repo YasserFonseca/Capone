@@ -3,7 +3,7 @@ import { TenantsTable } from '@/components/admin/TenantsTable'
 import { LiveRefresh }  from '@/components/admin/LiveRefresh'
 import styles from '../AdminDashboard.module.css'
 
-export const revalidate = 30
+export const dynamic = 'force-dynamic'
 
 export default async function AdminClientesPage() {
   const tenants = await getTenants(200)

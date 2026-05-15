@@ -7,7 +7,7 @@ import { LiveRefresh }  from '@/components/admin/LiveRefresh'
 import { Users, DollarSign, Wifi, MessageSquare } from 'lucide-react'
 import styles from './AdminDashboard.module.css'
 
-export const revalidate = 30
+export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboardPage() {
   const [metrics, tenants, payments, revenue] = await Promise.all([

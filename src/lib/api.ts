@@ -2,7 +2,10 @@
 // lib/api.ts — Camada centralizada de chamadas ao backend
 // ============================================================
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:3001'
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? ''
+if (!BACKEND_URL && typeof window !== 'undefined') {
+  console.error('[api] NEXT_PUBLIC_BACKEND_URL não está definida. Defina no .env.local.')
+}
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BACKEND_URL}${path}`, {
