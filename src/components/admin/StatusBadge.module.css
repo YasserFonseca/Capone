@@ -1,0 +1,28 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.success { background: rgba(45, 106, 79, .25); color: #4ade80; }
+.success .dot { background: #4ade80; }
+
+.warning { background: rgba(251, 191, 36, .15); color: #fbbf24; }
+.warning .dot { background: #fbbf24; }
+
+.danger  { background: rgba(192, 57, 43, .2);  color: #f87171; }
+.danger  .dot { background: #f87171; }
+
+.neutral { background: var(--surface-hover); color: var(--text-muted); }
+.neutral .dot { background: var(--text-muted); }
