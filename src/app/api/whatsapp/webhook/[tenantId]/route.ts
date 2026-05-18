@@ -29,7 +29,8 @@ export async function POST(
   // ── QRCODE_UPDATED / qrcode.updated ──────────────────────────
   if (event === 'QRCODE_UPDATED' || event === 'qrcode.updated') {
     const base64Raw = (body?.data?.qrcode?.base64 ?? body?.data?.base64) as string | undefined
-    const qrCode    = base64Raw?.replace(/^data:image\/[a-z]+;base64,/, '') ?? null
+    // Guarda o data URL completo para preservar o MIME type original
+    const qrCode = base64Raw ?? null
     if (qrCode) {
       await supabaseAdmin
         .from('whatsapp_instances')
