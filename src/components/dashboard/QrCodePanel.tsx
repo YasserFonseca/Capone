@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { RefreshCw, Loader2, CheckCircle } from 'lucide-react'
-import Image from 'next/image'
 import styles from '@/app/styles/Dashboard.module.css'
 import { getTenantStatus, refreshQrCode } from '@/lib/api'
 
@@ -76,11 +75,12 @@ export function QrCodePanel({ tenantId, initialQrCode }: Props) {
       <div style={{ textAlign: 'center' }}>
         {qrCode ? (
           <div className={styles.qrWrapper}>
-            <Image
+            <img
               src={qrCode.startsWith('data:') ? qrCode : `data:image/png;base64,${qrCode}`}
               alt="QR Code WhatsApp"
               width={180}
               height={180}
+              style={{ display: 'block' }}
             />
           </div>
         ) : (
