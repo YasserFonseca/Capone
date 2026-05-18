@@ -43,6 +43,7 @@ export async function evCreateInstance(tenantId: string, webhookUrl: string) {
     body: JSON.stringify({
       instanceName:    tenantId,
       token:           tenantId,
+      integration:     'WHATSAPP-BAILEYS',
       qrcode:          true,
       webhookUrl,
       webhookByEvents: true,

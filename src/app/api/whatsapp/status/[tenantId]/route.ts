@@ -39,8 +39,16 @@ export async function GET(
     const evState   = stateRes?.instance?.state ?? 'close'
     const whatsapp  = mapEvState(evState)
 
-    let qrCode: string | null = null
-    if (whatsapp !== 'connected') {
+    // Lê QR code do Supabase (salvo pelo webhook QRCODE_UPDATED)
+    const { data: instanceRow } = await supabaseAdmin
+      .from('whatsapp_instances')
+      .select('qr_code')
+      .eq('tenant_id', tenantId)
+      .single()
+    let qrCode: string | null = instanceRow?.qr_code ?? null
+
+    // Fallback: tenta buscar direto da Evolution API
+    if (!qrCode && whatsapp !== 'connected') {
       try {
         const connectRes = await evConnect(tenantId)
         qrCode = stripBase64Prefix(connectRes.base64)
@@ -54,7 +62,7 @@ export async function GET(
       .from('whatsapp_instances')
       .update({
         status:       whatsapp,
-        qr_code:      qrCode,
+        qr_code:      whatsapp !== 'connected' ? qrCode : null,
         connected_at: whatsapp === 'connected' ? new Date().toISOString() : null,
       })
       .eq('tenant_id', tenantId)

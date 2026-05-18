@@ -25,6 +25,18 @@ export async function POST(
 
   const event = body?.event as string | undefined
 
+  // ── QRCODE_UPDATED ────────────────────────────────────────────
+  if (event === 'QRCODE_UPDATED') {
+    const base64Raw = body?.data?.qrcode?.base64 as string | undefined
+    const qrCode    = base64Raw?.replace(/^data:image\/[a-z]+;base64,/, '') ?? null
+    if (qrCode) {
+      await supabaseAdmin
+        .from('whatsapp_instances')
+        .update({ status: 'connecting', qr_code: qrCode })
+        .eq('tenant_id', tenantId)
+    }
+  }
+
   // ── CONNECTION_UPDATE ──────────────────────────────────────────
   if (event === 'CONNECTION_UPDATE') {
     const state = body?.data?.state as string | undefined
