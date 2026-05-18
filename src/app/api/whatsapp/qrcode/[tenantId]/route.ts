@@ -32,18 +32,34 @@ export async function GET(
   if (!tenant) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   try {
-    const connectRes = await evConnect(tenantId)
-    const qrCode     = stripBase64Prefix(connectRes.base64)
+    // Lê QR salvo pelo webhook QRCODE_UPDATED
+    const { data: instanceRow } = await supabaseAdmin
+      .from('whatsapp_instances')
+      .select('qr_code, status')
+      .eq('tenant_id', tenantId)
+      .single()
 
-    if (!qrCode) {
-      return NextResponse.json({ error: 'QR Code não disponível' }, { status: 404 })
+    let qrCode = instanceRow?.qr_code ?? null
+
+    // Fallback: tenta buscar da Evolution API (pode não retornar na v2.1.1)
+    if (!qrCode && instanceRow?.status !== 'connected') {
+      try {
+        const connectRes = await evConnect(tenantId)
+        qrCode = stripBase64Prefix(connectRes.base64)
+        if (qrCode) {
+          await supabaseAdmin
+            .from('whatsapp_instances')
+            .update({ qr_code: qrCode })
+            .eq('tenant_id', tenantId)
+        }
+      } catch {
+        // Evolution API pode não retornar QR — aguardar webhook
+      }
     }
 
-    // Salva QR atualizado no banco
-    await supabaseAdmin
-      .from('whatsapp_instances')
-      .update({ qr_code: qrCode })
-      .eq('tenant_id', tenantId)
+    if (!qrCode) {
+      return NextResponse.json({ error: 'QR Code não disponível ainda, aguarde alguns segundos' }, { status: 404 })
+    }
 
     return NextResponse.json({ qrCode })
   } catch (err: unknown) {
