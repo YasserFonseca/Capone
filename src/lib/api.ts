@@ -47,11 +47,15 @@ export interface TenantStatus {
 }
 
 export async function getTenantStatus(tenantId: string): Promise<TenantStatus> {
-  return request<TenantStatus>(`/payments/status/${tenantId}`)
+  const res = await fetch(`/api/whatsapp/status/${tenantId}`)
+  if (!res.ok) throw new Error(`Erro ${res.status}`)
+  return res.json()
 }
 
 export async function refreshQrCode(tenantId: string): Promise<{ qrCode: string }> {
-  return request<{ qrCode: string }>(`/provisioning/qrcode/${tenantId}`)
+  const res = await fetch(`/api/whatsapp/qrcode/${tenantId}`)
+  if (!res.ok) throw new Error(`Erro ${res.status}`)
+  return res.json()
 }
 
 export function getMpOAuthUrl(tenantId: string): string {

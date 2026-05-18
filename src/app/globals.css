@@ -35,13 +35,14 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-black-mango), serif;
   font-weight: 600;
   color: #fff;
-  margin-bottom: 1rem;
+  margin: 0;
 }
 
 a {
@@ -64,9 +65,43 @@ button {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes capone-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%       { opacity: 0.4; transform: scale(1.4); }
+}
+
 .gradient-text {
   background: linear-gradient(90deg, #9d4edd, #c77dff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* ── Scrollbar personalizado ────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3c2459;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7b2cbf;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3c2459 transparent;
 }

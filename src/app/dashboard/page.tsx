@@ -1,216 +1,309 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { supabase } from '@/lib/supabase';
-import { getTenantStatus, getMpOAuthUrl, refreshQrCode } from '@/lib/api';
+import { redirect }           from 'next/navigation'
+import { cookies }            from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
+import { supabaseAdmin }      from '@/lib/supabase-admin'
 import {
-  Wifi, WifiOff, CheckCircle, Calendar, CreditCard,
-  Loader2, RefreshCw, LogOut, AlertCircle
-} from 'lucide-react';
-import Image from 'next/image';
+  Wifi, WifiOff, CreditCard, CheckCircle,
+  Calendar, MessageSquare, AlertTriangle,
+  Edit, RefreshCw,
+} from 'lucide-react'
+import Link from 'next/link'
+import { QrCodePanel }          from '@/components/dashboard/QrCodePanel'
+import { DashboardLiveMetrics } from '@/components/dashboard/DashboardLiveMetrics'
+import styles from '@/app/styles/Dashboard.module.css'
 
-interface DashStatus {
-  tenant:      string
-  whatsapp:    string
-  qrCode:      string | null
-  mpConnected: boolean
-}
+export const revalidate = 30
 
-export default function DashboardPage() {
-  const router = useRouter();
-  const [tenantId, setTenantId]   = useState<string | null>(null);
-  const [status, setStatus]       = useState<DashStatus | null>(null);
-  const [userName, setUserName]   = useState('');
-  const [loadingQr, setLoadingQr] = useState(false);
-  const [loading, setLoading]     = useState(true);
+export default async function DashboardPage() {
+  const cookieStore = cookies()
 
-  useEffect(() => {
-    const init = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { router.push('/login'); return; }
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { get(name: string) { return cookieStore.get(name)?.value } } }
+  )
 
-      const u = session.user
-      const isAdmin = u.user_metadata?.is_admin === true || u.app_metadata?.is_admin === true
-      if (isAdmin) { router.replace('/admin'); return; }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) redirect('/login')
 
-      setUserName(u.user_metadata?.full_name ?? u.email ?? '');
+  // Admin client para dados (bypassa RLS, filtrado pelo email da sessão verificada)
+  const { data: tenant } = await supabaseAdmin
+    .from('tenants')
+    .select('id, company_name, status, next_billing_at, segment_id')
+    .eq('owner_email', session.user.email)
+    .in('status', ['active', 'pending', 'suspended'])
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single()
 
-      // Busca o tenant do usuário
-      const { data: tenant } = await supabase
-        .from('tenants')
-        .select('id')
-        .eq('owner_email', u.email)
-        .eq('status', 'active')
-        .single();
-
-      if (!tenant) { setLoading(false); return; }
-
-      setTenantId(tenant.id);
-
-      const s = await getTenantStatus(tenant.id);
-      setStatus(s);
-      setLoading(false);
-    };
-    init();
-  }, [router]);
-
-  // Verifica se voltou do OAuth do MP
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('mp_connected') === 'true' && tenantId) {
-      getTenantStatus(tenantId).then(setStatus);
-    }
-  }, [tenantId]);
-
-  // Item 9: auto-refresh QR while WhatsApp is connecting
-  useEffect(() => {
-    if (status?.whatsapp !== 'connecting' || !tenantId) return;
-    const interval = setInterval(async () => {
-      try {
-        const { qrCode } = await refreshQrCode(tenantId);
-        setStatus(prev => prev ? { ...prev, qrCode } : prev);
-      } catch {}
-    }, 58_000);
-    return () => clearInterval(interval);
-  }, [status?.whatsapp, tenantId]);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push('/');
-  };
-
-  const handleRefreshQr = async () => {
-    if (!tenantId) return;
-    setLoadingQr(true);
-    try {
-      const { qrCode } = await refreshQrCode(tenantId);
-      setStatus(prev => prev ? { ...prev, qrCode } : prev);
-    } finally {
-      setLoadingQr(false);
-    }
-  };
-
-  const whatsappColor  = status?.whatsapp === 'connected' ? 'var(--success)' : status?.whatsapp === 'connecting' ? '#ffd166' : '#ff4d4d';
-  const whatsappLabel  = status?.whatsapp === 'connected' ? 'Conectado' : status?.whatsapp === 'connecting' ? 'Aguardando QR Code' : 'Desconectado';
-
-  if (loading) {
+  if (!tenant) {
     return (
-      <><Header />
-      <main style={{ paddingTop: '80px', minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Loader2 size={40} style={{ color: '#9d4edd', animation: 'spin 1s linear infinite' }} />
-      </main>
-      <Footer /></>
-    );
+      <div>
+        <div className={styles.topbar}>
+          <div>
+            <h1 className={styles.topbarTitle}>Início</h1>
+          </div>
+        </div>
+        <div className={styles.content}>
+          <div className={styles.card} style={{ textAlign: 'center', padding: '3rem' }}>
+            <AlertTriangle size={48} color="#fbbf24" style={{ margin: '0 auto 16px' }} />
+            <h2 style={{ marginBottom: '8px' }}>Nenhuma automação ativa</h2>
+            <p style={{ color: '#a496b8', marginBottom: '24px', fontSize: '14px' }}>
+              Você ainda não tem nenhuma automação configurada.
+            </p>
+            <Link href="/servicos" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 24px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: 600, color: '#fff', background: 'linear-gradient(135deg,#5a189a,#9d4edd)' }}>
+              Ver Serviços Disponíveis
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
-  return (
-    <>
-      <Header />
-      <main style={{ paddingTop: '100px', minHeight: '80vh', maxWidth: '900px', margin: '0 auto', padding: '100px 1.5rem 3rem' }}>
+  const tenantId = tenant.id
+  const today    = new Date().toISOString().split('T')[0]
 
-        {/* Cabeçalho */}
-        <div className="fade-in" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-          <div>
-            <h1 style={{ color: '#fff', marginBottom: '0.25rem' }}>Olá, {userName.split(' ')[0]} 👋</h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Painel de controle da sua automação</p>
+  // Admin client para todos os dados — filtrado por tenantId da sessão verificada
+  const [instanceRes, configRes, apptRes, apptTodayRes, conversasRes] = await Promise.all([
+    supabaseAdmin.from('whatsapp_instances')
+      .select('status, qr_code, connected_at')
+      .eq('tenant_id', tenantId)
+      .single(),
+    supabaseAdmin.from('tenant_config')
+      .select('mp_access_token, services, business_hours')
+      .eq('tenant_id', tenantId)
+      .single(),
+    supabaseAdmin.from('appointments')
+      .select('id, customer_name, customer_phone, service, price, scheduled_at, status')
+      .eq('tenant_id', tenantId)
+      .gte('scheduled_at', new Date().toISOString())
+      .in('status', ['pending', 'confirmed'])
+      .order('scheduled_at', { ascending: true })
+      .limit(5),
+    supabaseAdmin.from('appointments')
+      .select('id', { count: 'exact', head: true })
+      .eq('tenant_id', tenantId)
+      .gte('scheduled_at', today)
+      .lt('scheduled_at', `${today}T23:59:59`),
+    supabaseAdmin.from('conversations')
+      .select('id')
+      .eq('tenant_id', tenantId),
+  ])
+
+  const instance     = instanceRes.data
+  const config       = configRes.data
+  const appointments = apptRes.data ?? []
+  const apptToday    = apptTodayRes.count ?? 0
+  const mpConnected  = !!config?.mp_access_token
+
+  // Mensagens hoje — filtradas pelas conversas deste tenant
+  const convIds = (conversasRes.data ?? []).map(c => c.id)
+  let msgToday = 0
+  if (convIds.length > 0) {
+    const { count } = await supabaseAdmin
+      .from('messages')
+      .select('id', { count: 'exact', head: true })
+      .in('conversation_id', convIds)
+      .gte('created_at', today)
+    msgToday = count ?? 0
+  }
+
+  const whatsappStatus = instance?.status ?? 'disconnected'
+  const isConnected    = whatsappStatus === 'connected'
+
+  const nextBilling = tenant.next_billing_at
+    ? new Date(tenant.next_billing_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
+    : null
+
+  const userName = session.user.user_metadata?.full_name ?? session.user.email ?? ''
+
+  return (
+    <div>
+      <div className={styles.topbar}>
+        <div>
+          <h1 className={styles.topbarTitle}>
+            Olá, {userName.split(' ')[0]} 👋
+          </h1>
+          <p className={styles.topbarSub}>{tenant.company_name}</p>
+        </div>
+      </div>
+
+      <div className={styles.content}>
+
+        {tenant.status === 'suspended' && (
+          <div className={styles.alertBar} style={{ borderColor: 'rgba(192,57,43,.3)', background: 'rgba(192,57,43,.08)' }}>
+            <AlertTriangle size={18} color="#f87171" style={{ flexShrink: 0 }} />
+            <span>Sua automação está <strong>suspensa</strong> por falta de pagamento. Entre em contato com o suporte.</span>
           </div>
-          <button onClick={handleLogout}
-            style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-muted)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-            <LogOut size={16} /> Sair
-          </button>
+        )}
+
+        <DashboardLiveMetrics
+          tenantId={tenantId}
+          initialAppt={apptToday}
+          initialMsg={msgToday}
+          mpConnected={mpConnected}
+          nextBilling={nextBilling}
+        />
+
+        {!isConnected && tenant.status === 'active' && (
+          <QrCodePanel tenantId={tenantId} initialQrCode={instance?.qr_code ?? null} />
+        )}
+
+        <div className={styles.twoCol}>
+
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h2 className={styles.cardTitle}>Status da automação</h2>
+            </div>
+
+            <div className={styles.statusRow}>
+              <span className={styles.statusLabel}>
+                {isConnected ? <Wifi size={16} color="#4ade80" /> : <WifiOff size={16} color="#f87171" />}
+                WhatsApp
+              </span>
+              <span className={`${styles.badge} ${isConnected ? styles.badgeOn : whatsappStatus === 'connecting' ? styles.badgeWait : styles.badgeOff}`}>
+                <span className={`${styles.dot} ${isConnected ? styles.dotOn : whatsappStatus === 'connecting' ? styles.dotWait : styles.dotOff}`} />
+                {isConnected ? 'Conectado' : whatsappStatus === 'connecting' ? 'Conectando' : 'Desconectado'}
+              </span>
+            </div>
+
+            <div className={styles.statusRow}>
+              <span className={styles.statusLabel}>
+                <span style={{ fontSize: '16px' }}>🤖</span> Bot IA
+              </span>
+              <span className={`${styles.badge} ${tenant.status === 'active' ? styles.badgeOn : styles.badgeOff}`}>
+                <span className={`${styles.dot} ${tenant.status === 'active' ? styles.dotOn : styles.dotOff}`} />
+                {tenant.status === 'active' ? 'Online' : 'Offline'}
+              </span>
+            </div>
+
+            <div className={styles.statusRow}>
+              <span className={styles.statusLabel}>
+                <CreditCard size={16} /> Mercado Pago
+              </span>
+              <span className={`${styles.badge} ${mpConnected ? styles.badgeOn : styles.badgeWait}`}>
+                <span className={`${styles.dot} ${mpConnected ? styles.dotOn : styles.dotWait}`} />
+                {mpConnected ? 'Conectado' : 'Não conectado'}
+              </span>
+            </div>
+
+            <div className={styles.statusRow}>
+              <span className={styles.statusLabel}>
+                <CheckCircle size={16} /> Plano
+              </span>
+              <span className={`${styles.badge} ${tenant.status === 'active' ? styles.badgeOn : styles.badgeOff}`}>
+                <span className={`${styles.dot} ${tenant.status === 'active' ? styles.dotOn : styles.dotOff}`} />
+                {tenant.status === 'active' ? 'Ativo' : 'Suspenso'}
+              </span>
+            </div>
+
+            <div className={styles.quickActions}>
+              <Link href="/dashboard/configuracoes" className={styles.btn}>
+                <Edit size={14} /> Editar bot
+              </Link>
+              {!isConnected && (
+                <Link href="/dashboard" className={styles.btn}>
+                  <RefreshCw size={14} /> Novo QR Code
+                </Link>
+              )}
+            </div>
+          </div>
+
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h2 className={styles.cardTitle}>Próximos agendamentos</h2>
+              <Link href="/dashboard/agendamentos" className={styles.cardLink}>ver todos →</Link>
+            </div>
+
+            {appointments.length === 0 ? (
+              <p style={{ color: '#a496b8', fontSize: '13px', textAlign: 'center', padding: '1.5rem 0' }}>
+                Nenhum agendamento futuro.
+              </p>
+            ) : (
+              appointments.map(appt => {
+                const initials = (appt.customer_name ?? appt.customer_phone)
+                  .split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()
+
+                const dateStr = new Date(appt.scheduled_at).toLocaleString('pt-BR', {
+                  day: '2-digit', month: '2-digit',
+                  hour: '2-digit', minute: '2-digit',
+                })
+
+                return (
+                  <div key={appt.id} className={styles.apptItem}>
+                    <div className={styles.apptInfo}>
+                      <div className={styles.apptAvatar}>{initials}</div>
+                      <div>
+                        <div className={styles.apptName}>{appt.customer_name ?? appt.customer_phone}</div>
+                        <div className={styles.apptService}>{appt.service}</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className={styles.apptDate}>{dateStr}</div>
+                      <div className={styles.apptPrice}>
+                        {appt.price ? `R$${Number(appt.price).toFixed(2)}` : '—'}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })
+            )}
+          </div>
         </div>
 
-        {/* Sem tenant ativo */}
-        {!tenantId && (
-          <div className="fade-in" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '2.5rem', textAlign: 'center' }}>
-            <AlertCircle size={48} style={{ color: '#ffd166', margin: '0 auto 1rem' }} />
-            <h2 style={{ color: '#fff', marginBottom: '0.75rem' }}>Nenhuma automação ativa</h2>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Você ainda não tem nenhuma automação configurada.</p>
-            <button onClick={() => router.push('/servicos')}
-              style={{ background: 'linear-gradient(90deg,#9d4edd,#c77dff)', color: '#fff', padding: '0.75rem 2rem', borderRadius: '10px', border: 'none', fontWeight: '700', cursor: 'pointer' }}>
-              Ver Serviços
-            </button>
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2 className={styles.cardTitle}>Prévia do bot</h2>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: '#4ade80' }}>
+              <span className={`${styles.dot} ${styles.dotOn}`} />
+              ao vivo
+            </span>
           </div>
-        )}
-
-        {/* Cards de status */}
-        {status && (
-          <div className="fade-in" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
-
-            {/* WhatsApp */}
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                {status.whatsapp === 'connected' ? <Wifi size={22} style={{ color: 'var(--success)' }} /> : <WifiOff size={22} style={{ color: '#ff4d4d' }} />}
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>WhatsApp</span>
-              </div>
-              <p style={{ color: whatsappColor, fontWeight: '700', fontSize: '1.05rem' }}>{whatsappLabel}</p>
-            </div>
-
-            {/* Mercado Pago */}
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                <CreditCard size={22} style={{ color: status.mpConnected ? 'var(--success)' : '#ffd166' }} />
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Mercado Pago</span>
-              </div>
-              {status.mpConnected
-                ? <p style={{ color: 'var(--success)', fontWeight: '700' }}>Conectado ✓</p>
-                : tenantId
-                  ? <a href={getMpOAuthUrl(tenantId)} style={{ color: '#009ee3', fontWeight: '600', fontSize: '0.9rem' }}>Conectar agora →</a>
-                  : null}
-            </div>
-
-            {/* Status geral */}
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                <CheckCircle size={22} style={{ color: status.tenant === 'active' ? 'var(--success)' : '#ff4d4d' }} />
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Plano</span>
-              </div>
-              <p style={{ color: status.tenant === 'active' ? 'var(--success)' : '#ff4d4d', fontWeight: '700' }}>
-                {status.tenant === 'active' ? 'Ativo' : status.tenant === 'suspended' ? 'Suspenso' : 'Pendente'}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* QR Code — só aparece se WhatsApp está conectando */}
-        {status?.whatsapp === 'connecting' && (
-          <div className="fade-in" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '2rem', textAlign: 'center', marginBottom: '2rem' }}>
-            <h2 style={{ color: '#fff', marginBottom: '0.5rem' }}>Conecte seu WhatsApp</h2>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-              WhatsApp → Aparelhos conectados → Conectar aparelho → Escaneie o código abaixo
-            </p>
-            {status.qrCode
-              ? <div style={{ background: '#fff', padding: '1rem', borderRadius: '12px', display: 'inline-block', marginBottom: '1rem' }}>
-                  <Image src={`data:image/png;base64,${status.qrCode}`} alt="QR Code" width={200} height={200} />
+          <div className={styles.chatMessages}>
+            <div className={styles.chatRow}>
+              <div className={styles.chatAvatar} style={{ background: '#261a35', fontSize: '14px' }}>👤</div>
+              <div>
+                <div className={`${styles.chatBubble} ${styles.chatBubbleUser}`}>
+                  Oi, quero marcar um horário
                 </div>
-              : <div style={{ width: '200px', height: '200px', background: 'var(--surface-hover)', borderRadius: '12px', margin: '0 auto 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Loader2 size={28} style={{ color: '#9d4edd', animation: 'spin 1s linear infinite' }} />
+                <div className={styles.chatTime} style={{ textAlign: 'right' }}>14:32</div>
+              </div>
+            </div>
+            <div className={styles.chatRow}>
+              <div className={styles.chatAvatar}>🤖</div>
+              <div>
+                <div className={`${styles.chatBubble} ${styles.chatBubbleBot}`}>
+                  Olá! Seja bem-vindo à <strong>{tenant.company_name}</strong> 👋
+                  Tenho horários disponíveis hoje às 15h, 16h30 e 18h. Qual prefere?
                 </div>
-            }
-            <button onClick={handleRefreshQr} disabled={loadingQr}
-              style={{ background: 'var(--surface-hover)', border: '1px solid var(--border)', color: '#fff', padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-              {loadingQr ? <Loader2 size={14} /> : <RefreshCw size={14} />} Novo QR Code
-            </button>
+                <div className={styles.chatTime}>14:32</div>
+              </div>
+            </div>
+            <div className={styles.chatRow}>
+              <div className={styles.chatAvatar} style={{ background: '#261a35', fontSize: '14px' }}>👤</div>
+              <div>
+                <div className={`${styles.chatBubble} ${styles.chatBubbleUser}`}>15h tá bom</div>
+                <div className={styles.chatTime} style={{ textAlign: 'right' }}>14:33</div>
+              </div>
+            </div>
+            <div className={styles.chatRow}>
+              <div className={styles.chatAvatar}>🤖</div>
+              <div>
+                <div className={`${styles.chatBubble} ${styles.chatBubbleBot}`}>
+                  Perfeito! Agendei para hoje às 15h00. Te espero lá! ✅
+                </div>
+                <div className={styles.chatTime}>14:33</div>
+              </div>
+            </div>
           </div>
-        )}
+          <div style={{ marginTop: '14px', textAlign: 'center' }}>
+            <Link href="/dashboard/conversas" className={styles.btn}>
+              <MessageSquare size={14} /> Ver todas as conversas
+            </Link>
+          </div>
+        </div>
 
-        {/* Atalhos */}
-        {status?.tenant === 'active' && (
-          <div className="fade-in" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-            <button onClick={() => router.push('/servicos')}
-              style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.25rem', cursor: 'pointer', textAlign: 'left', color: '#fff' }}>
-              <Calendar size={20} style={{ color: '#9d4edd', marginBottom: '0.5rem' }} />
-              <p style={{ fontWeight: '600' }}>Ver Agendamentos</p>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.25rem' }}>Em breve</p>
-            </button>
-          </div>
-        )}
-      </main>
-      <Footer />
-      <style jsx global>{`@keyframes spin { from{transform:rotate(0deg)}to{transform:rotate(360deg)} }`}</style>
-    </>
-  );
+      </div>
+    </div>
+  )
 }

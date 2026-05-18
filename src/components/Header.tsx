@@ -74,7 +74,7 @@ export default function Header() {
 
     <header className={styles.header}>
       <Link href="/" className={styles.logo} style={{ textDecoration: 'none' }}>
-        <Logo width={32} height={32} className={styles.logoIcon} />
+        <Logo width={60} height={60} className={styles.logoIcon} />
         <span style={{ marginLeft: '10px' }}>CAPONE</span>
       </Link>
 
