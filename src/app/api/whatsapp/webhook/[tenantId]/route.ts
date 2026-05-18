@@ -26,9 +26,9 @@ export async function POST(
 
   const event = body?.event as string | undefined
 
-  // ── QRCODE_UPDATED ────────────────────────────────────────────
-  if (event === 'QRCODE_UPDATED') {
-    const base64Raw = body?.data?.qrcode?.base64 as string | undefined
+  // ── QRCODE_UPDATED / qrcode.updated ──────────────────────────
+  if (event === 'QRCODE_UPDATED' || event === 'qrcode.updated') {
+    const base64Raw = (body?.data?.qrcode?.base64 ?? body?.data?.base64) as string | undefined
     const qrCode    = base64Raw?.replace(/^data:image\/[a-z]+;base64,/, '') ?? null
     if (qrCode) {
       await supabaseAdmin
@@ -38,8 +38,8 @@ export async function POST(
     }
   }
 
-  // ── CONNECTION_UPDATE ──────────────────────────────────────────
-  if (event === 'CONNECTION_UPDATE') {
+  // ── CONNECTION_UPDATE / connection.update ──────────────────────
+  if (event === 'CONNECTION_UPDATE' || event === 'connection.update') {
     const state = body?.data?.state as string | undefined
 
     if (state === 'open') {
