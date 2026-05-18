@@ -79,10 +79,10 @@
 }
 
 .sidebarSection {
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #6b5b82;
+  color: #b8a8d4;
   padding: 10px 8px 4px;
   margin-top: 4px;
 }
@@ -93,8 +93,8 @@
   gap: 10px;
   padding: 9px 12px;
   border-radius: 8px;
-  color: #a496b8;
-  font-size: 13px;
+  color: #e8e0f5;
+  font-size: 14px;
   text-decoration: none;
   transition: all 0.15s ease;
   border: none;
@@ -146,8 +146,8 @@
   flex-shrink: 0;
 }
 
-.sidebarUserName  { font-size: 12px; font-weight: 600; color: #f0f0f0; }
-.sidebarUserEmail { font-size: 10px; color: #a496b8; }
+.sidebarUserName  { font-size: 13px; font-weight: 600; color: #fff; }
+.sidebarUserEmail { font-size: 11px; color: #e8e0f5; }
 
 /* ── Topbar ─────────────────────────────────────────────────── */
 .topbar {
@@ -162,8 +162,8 @@
   z-index: 10;
 }
 
-.topbarTitle { font-size: 17px; font-weight: 600; margin: 0; color: #fff; }
-.topbarSub   { font-size: 12px; color: #a496b8; margin-top: 2px; }
+.topbarTitle { font-size: 19px; font-weight: 600; margin: 0; color: #fff; }
+.topbarSub   { font-size: 13px; color: #e8e0f5; margin-top: 2px; }
 
 /* ── Conteúdo ───────────────────────────────────────────────── */
 .content {
@@ -225,14 +225,14 @@
 }
 
 .cardTitle {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   margin: 0;
   color: #fff;
 }
 
 .cardLink {
-  font-size: 11px;
+  font-size: 12px;
   color: #c77dff;
   text-decoration: none;
   white-space: nowrap;
@@ -250,8 +250,8 @@
 }
 
 .metricLabel {
-  font-size: 11px;
-  color: #a496b8;
+  font-size: 12px;
+  color: #e8e0f5;
   margin-bottom: 8px;
   display: flex;
   align-items: center;
@@ -259,15 +259,15 @@
 }
 
 .metricValue {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
   color: #f0f0f0;
   line-height: 1;
 }
 
 .metricSub {
-  font-size: 11px;
-  color: #a496b8;
+  font-size: 12px;
+  color: #e8e0f5;
   margin-top: 4px;
 }
 
@@ -286,8 +286,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
-  color: #a496b8;
+  font-size: 14px;
+  color: #e8e0f5;
 }
 
 /* ── Badges ─────────────────────────────────────────────────── */
@@ -344,10 +344,10 @@
   flex-shrink: 0;
 }
 
-.apptName    { font-size: 13px; font-weight: 600; color: #f0f0f0; }
-.apptService { font-size: 11px; color: #a496b8; margin-top: 1px; }
-.apptDate    { font-size: 11px; color: #a496b8; text-align: right; }
-.apptPrice   { font-size: 13px; font-weight: 600; color: #c77dff; text-align: right; margin-top: 1px; }
+.apptName    { font-size: 14px; font-weight: 600; color: #fff; }
+.apptService { font-size: 12px; color: #e8e0f5; margin-top: 1px; }
+.apptDate    { font-size: 12px; color: #e8e0f5; text-align: right; }
+.apptPrice   { font-size: 14px; font-weight: 600; color: #c77dff; text-align: right; margin-top: 1px; }
 
 /* ── Chat preview ───────────────────────────────────────────── */
 .chatMessages {
@@ -373,7 +373,7 @@
 .chatBubble {
   padding: 9px 13px;
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.5;
   max-width: 78%;
 }
@@ -392,8 +392,8 @@
 }
 
 .chatTime {
-  font-size: 10px;
-  color: #a496b8;
+  font-size: 11px;
+  color: #e8e0f5;
   margin-top: 3px;
   padding: 0 4px;
 }
@@ -428,7 +428,7 @@
   border: 1px solid #523178;
   background: #261a35;
   color: #f0f0f0;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;

@@ -14,7 +14,7 @@
 }
 
 .title {
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 600;
   margin: 0;
 }
@@ -51,13 +51,13 @@
 }
 
 .cardTitle {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   margin: 0;
 }
 
-.cardLink  { font-size: 11px; color: #c77dff; text-decoration: none; }
-.cardMeta  { font-size: 11px; color: var(--text-muted); }
+.cardLink  { font-size: 12px; color: #c77dff; text-decoration: none; }
+.cardMeta  { font-size: 12px; color: var(--text-muted); }
 
 .activityList { display: flex; flex-direction: column; gap: 2px; }
 
@@ -87,16 +87,16 @@
 .actContent { flex: 1; min-width: 0; }
 
 .actText {
-  font-size: 12px;
+  font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
 }
 
-.actMeta { font-size: 10px; color: var(--text-muted); margin: 2px 0 0; }
+.actMeta { font-size: 11px; color: var(--text-muted); margin: 2px 0 0; }
 
-.empty { text-align: center; color: var(--text-muted); font-size: 12px; padding: 1.5rem 0; }
+.empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 1.5rem 0; }
 
 .tableWrap {
   padding: 0 24px 14px;

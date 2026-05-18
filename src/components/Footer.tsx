@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Diamond } from 'lucide-react';
+import Logo from './Logo';
 import styles from './Footer.module.css';
 
 function ComingSoon({ children }: { children: React.ReactNode }) {
@@ -26,7 +26,7 @@ export default function Footer() {
 
         <div className={styles.brand}>
           <div className={styles.logo}>
-            <Diamond className={styles.logoIcon} size={24} color="var(--primary)" /> CAPONE
+            <Logo width={60} height={60} className={styles.logoIcon} /> CAPONE
           </div>
           <p className={styles.description}>
             Transformando o atendimento de negócios através de automações inteligentes e CRMs otimizados.
