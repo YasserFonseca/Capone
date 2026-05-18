@@ -20,7 +20,8 @@ export async function POST(
 
   if (!tenant) return NextResponse.json({ ok: false }, { status: 404 })
 
-  let body: Record<string, unknown>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any
   try { body = await req.json() } catch { return NextResponse.json({ ok: false }) }
 
   const event = body?.event as string | undefined
