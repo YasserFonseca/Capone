@@ -44,7 +44,6 @@ export default async function AgendamentosPage() {
 
   const list     = appointments ?? []
   const upcoming = list.filter(a => new Date(a.scheduled_at) >= new Date() && a.status !== 'cancelled')
-  const past     = list.filter(a => new Date(a.scheduled_at) <  new Date() || a.status === 'cancelled')
 
   return (
     <div>

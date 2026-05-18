@@ -46,10 +46,8 @@ export async function GET(
       .eq('tenant_id', tenantId)
 
     return NextResponse.json({ qrCode })
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err?.message ?? 'Erro ao gerar QR Code' },
-      { status: 500 }
-    )
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Erro ao gerar QR Code'
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

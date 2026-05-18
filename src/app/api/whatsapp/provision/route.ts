@@ -73,10 +73,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ ok: true, qrCode })
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err?.message ?? 'Erro ao provisionar instância' },
-      { status: 500 }
-    )
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Erro ao provisionar instância'
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

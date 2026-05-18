@@ -46,8 +46,8 @@ export function TenantsTable({ tenants }: { tenants: Tenant[] }) {
           ? { ...t, whatsapp_instances: { status: 'connecting' as const, connected_at: t.whatsapp_instances?.connected_at ?? null } }
           : t
       ))
-    } catch (err: any) {
-      alert(`Erro ao provisionar: ${err.message}`)
+    } catch (err: unknown) {
+      alert(`Erro ao provisionar: ${err instanceof Error ? err.message : 'Erro desconhecido'}`)
     } finally {
       setProvisioning(null)
     }

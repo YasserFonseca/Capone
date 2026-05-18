@@ -23,7 +23,7 @@ export function DashboardLiveMetrics({ tenantId, initialAppt, initialMsg, mpConn
       if (!res.ok) return
       const data = await res.json()
 
-      let changed = { appt: false, msg: false }
+      const changed = { appt: false, msg: false }
 
       if (data.apptToday !== apptToday) {
         setApptToday(data.apptToday)
