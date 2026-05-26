@@ -1,0 +1,764 @@
+/* ── Checkout & Pagamentos Capone (Banco Inter Fintech Style) ────────── */
+
+.container {
+  padding-top: 100px;
+  min-height: 90vh;
+  background-color: #08080c;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-bottom: 4rem;
+}
+
+.checkoutWrapper {
+  max-width: 1100px;
+  width: 100%;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+  .checkoutWrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Coluna de Pagamento ─────────────────────────────────────── */
+
+.paymentCol {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.paymentCard {
+  background: rgba(26, 18, 36, 0.4);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(157, 78, 221, 0.15);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.title {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--text-muted, #94a3b8);
+  font-size: 0.9rem;
+  margin: 0.2rem 0 0 0;
+}
+
+/* Seletor de Abas Banco Inter Style */
+.tabSelector {
+  display: flex;
+  background: rgba(8, 8, 12, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 4px;
+  border-radius: 12px;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.tabBtn {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+  border-radius: 9px;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.tabActive {
+  color: #fff;
+}
+
+.tabGlider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: linear-gradient(135deg, #FF7A00, #FF9E00);
+  border-radius: 9px;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 4px 15px rgba(255, 122, 0, 0.3);
+  z-index: 1;
+}
+
+.tabContent {
+  margin-top: 1.5rem;
+}
+
+/* ── Aba PIX ─────────────────────────────────────────────────── */
+
+.pixInfoBox {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .pixInfoBox {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.qrCodeWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.qrPlaceholder {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.qrCorners {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid #FF7A00;
+  border-radius: 18px;
+  pointer-events: none;
+  opacity: 0.4;
+  animation: qrPulse 2s infinite ease-in-out;
+}
+
+.qrImage {
+  display: block;
+}
+
+.pixClock {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.timerText {
+  color: #FF7A00;
+  font-weight: 700;
+}
+
+.pixInstructions h3 {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+}
+
+.pixInstructions ol {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  padding-left: 1.2rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.pixInstructions ol li strong {
+  color: #fff;
+}
+
+.copyBox {
+  margin-bottom: 2rem;
+}
+
+.copyInputWrapper {
+  display: flex;
+  background: rgba(8, 8, 12, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 6px;
+  overflow: hidden;
+}
+
+.copyInput {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-family: monospace;
+  padding: 0 1rem;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.copyBtn {
+  background: linear-gradient(135deg, rgba(255, 122, 0, 0.1), rgba(255, 158, 0, 0.15));
+  border: 1px solid rgba(255, 122, 0, 0.3);
+  color: #FF7A00;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.copyBtn:hover {
+  background: linear-gradient(135deg, #FF7A00, #FF9E00);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 122, 0, 0.25);
+}
+
+/* ── Aba Cartão Virtual 3D ───────────────────────────────────── */
+
+.cardWidgetWrapper {
+  perspective: 1000px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.virtualCard {
+  width: 340px;
+  height: 200px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+}
+
+.flipped {
+  transform: rotateY(180deg);
+}
+
+.cardFront, .cardBack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.cardFront {
+  background: linear-gradient(135deg, #1f1f2e, #0e0e15);
+  border: 1px solid rgba(255, 122, 0, 0.3);
+}
+
+.cardFront::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,122,0,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.cardPattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.05;
+  background-image: radial-gradient(#FF7A00 1px, transparent 0);
+  background-size: 12px 12px;
+  pointer-events: none;
+}
+
+.cardTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardLogoName {
+  font-weight: 800;
+  color: #fff;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+}
+
+.neonDot {
+  color: #9d4edd;
+  text-shadow: 0 0 8px #c77dff;
+}
+
+.bankName {
+  font-size: 0.75rem;
+  color: #FF7A00;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.cardChip {
+  width: 42px;
+  height: 32px;
+  background: linear-gradient(135deg, #e8c97a, #c9a84c);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.chipLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.chipLines::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.chipLines::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.cardNumDisplay {
+  color: #fff;
+  font-size: 1.35rem;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 2px;
+  margin-top: 1.2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.cardBottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.holderBlock, .expiryBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cardMetaLabel {
+  font-size: 0.6rem;
+  color: #64748b;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.cardValueDisplay {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Verso do Cartão */
+.cardBack {
+  background: linear-gradient(135deg, #0e0e15, #1f1f2e);
+  transform: rotateY(180deg);
+  border: 1px solid rgba(157, 78, 221, 0.2);
+  padding: 0;
+}
+
+.cardMagneticStrip {
+  background: #000;
+  width: 100%;
+  height: 40px;
+  margin-top: 1.2rem;
+}
+
+.cardSignatureBlock {
+  margin: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  height: 38px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 10px;
+  position: relative;
+}
+
+.cvvLabel {
+  position: absolute;
+  left: 10px;
+  top: -16px;
+  font-size: 0.6rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.cvvDisplay {
+  color: #FF7A00;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.cardBackFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem 1.2rem;
+  color: #64748b;
+  font-size: 0.65rem;
+}
+
+.cardBackFooter p {
+  margin: 0;
+}
+
+/* ── Formulário do Cartão ────────────────────────────────────── */
+
+.cardForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputRow {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.inputLabel {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.formInput {
+  background: rgba(8, 8, 12, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  color: #fff;
+  outline: none;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.formInput:focus {
+  border-color: #FF7A00;
+  box-shadow: 0 0 10px rgba(255, 122, 0, 0.15);
+}
+
+.formInput::placeholder {
+  color: #475569;
+}
+
+/* ── Botões de Ação Geral ────────────────────────────────────── */
+
+.actionBtn {
+  width: 100%;
+  background: linear-gradient(135deg, #FF7A00, #FF9E00);
+  border: none;
+  color: #fff;
+  padding: 1.1rem;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  box-shadow: 0 8px 20px rgba(255, 122, 0, 0.25);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.actionBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(255, 122, 0, 0.35);
+  background: linear-gradient(135deg, #ff8c21, #ffb32b);
+}
+
+.actionBtn:active {
+  transform: translateY(0);
+}
+
+.secureBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  color: #475569;
+  font-size: 0.75rem;
+  margin-top: 1.2rem;
+}
+
+/* ── Coluna do Resumo do Pedido ─────────────────────────────── */
+
+.summaryCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.summaryCard {
+  background: rgba(26, 18, 36, 0.35);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(157, 78, 221, 0.12);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  position: sticky;
+  top: 120px;
+}
+
+.summaryTitle {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+}
+
+.businessBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 122, 0, 0.08);
+  border: 1px solid rgba(255, 122, 0, 0.15);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.businessBadge strong {
+  color: #fff;
+}
+
+.summaryDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 1.5rem 0;
+}
+
+.pricingRows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.pricingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.rowLabel h4 {
+  color: #fff;
+  font-size: 0.95rem;
+  margin: 0 0 0.2rem 0;
+  font-weight: 600;
+}
+
+.rowLabel p {
+  color: #64748b;
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+.rowValue {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 1rem;
+}
+
+.totalRow > span {
+  color: #94a3b8;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.totalBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.totalPrice {
+  color: #FF7A00;
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-shadow: 0 0 15px rgba(255, 122, 0, 0.15);
+}
+
+.setupWarning {
+  color: #64748b;
+  font-size: 0.7rem;
+}
+
+.guaranteeBox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  margin-top: 2rem;
+  line-height: 1.4;
+}
+
+/* ── Overlay de Processamento Seguro ────────────────────────── */
+
+.processingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(8, 8, 12, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.processingBox {
+  background: rgba(26, 18, 36, 0.6);
+  border: 1px solid rgba(157, 78, 221, 0.2);
+  border-radius: 24px;
+  padding: 3rem;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.processingBox h2 {
+  color: #fff;
+  margin: 0.5rem 0 0 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.processingStepText {
+  color: #FF7A00;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  min-height: 24px;
+}
+
+.progressBarWrapper {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, #FF7A00, #9d4edd);
+  border-radius: 3px;
+  transition: width 0.8s ease;
+  box-shadow: 0 0 8px rgba(255, 122, 0, 0.5);
+}
+
+.spinner {
+  color: #FF7A00;
+  animation: spin 1.2s cubic-bezier(0.5, 0.1, 0.1, 0.9) infinite;
+}
+
+/* ── Keyframes de Animação ──────────────────────────────────── */
+
+@keyframes qrPulse {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.02); opacity: 0.7; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

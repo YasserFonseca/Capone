@@ -29,7 +29,7 @@ export default async function DashboardPage() {
   // Admin client para dados (bypassa RLS, filtrado pelo email da sessão verificada)
   const { data: tenant } = await supabaseAdmin
     .from('tenants')
-    .select('id, company_name, status, next_billing_at, segment_id')
+    .select('id, company_name, status, next_billing_at, segment_id, plan')
     .eq('owner_email', session.user.email)
     .in('status', ['active', 'pending', 'suspended'])
     .order('created_at', { ascending: false })
@@ -124,7 +124,12 @@ export default async function DashboardPage() {
           <h1 className={styles.topbarTitle}>
             Olá, {userName.split(' ')[0]} 👋
           </h1>
-          <p className={styles.topbarSub}>{tenant.company_name}</p>
+          <p className={styles.topbarSub} style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span>{tenant.company_name}</span>
+            <span className={`${styles.planBadge} ${styles['planBadge_' + (tenant.plan ?? 'pro')]}`}>
+              {tenant.plan ?? 'pro'}
+            </span>
+          </p>
         </div>
       </div>
 

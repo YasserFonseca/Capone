@@ -65,6 +65,7 @@ export default function Header() {
           <div className={styles.mobileOverlay} onClick={closeNav} />
           <nav className={styles.mobileNav}>
             <Link href="/" className={styles.mobileNavLink} onClick={closeNav}>Início</Link>
+            <Link href="/planos" className={styles.mobileNavLink} onClick={closeNav}>Planos</Link>
             <Link href="/servicos" className={styles.mobileNavLink} onClick={closeNav}>Serviços</Link>
             <Link href="/sobre" className={styles.mobileNavLink} onClick={closeNav}>Sobre</Link>
             <Link href="/contato" className={styles.mobileNavLink} onClick={closeNav}>Contato</Link>
@@ -80,6 +81,7 @@ export default function Header() {
 
       <nav className={styles.nav}>
         <Link href="/" className={styles.navLink}>Início</Link>
+        <Link href="/planos" className={styles.navLink}>Planos</Link>
         <Link href="/servicos" className={styles.navLink}>Serviços</Link>
         <Link href="/sobre" className={styles.navLink}>Sobre</Link>
         <Link href="/contato" className={styles.navLink}>Contato</Link>
@@ -141,7 +143,7 @@ export default function Header() {
         )}
 
         <Link
-          href="/servicos"
+          href="/planos"
           className={styles.ctaButton}
           style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
         >

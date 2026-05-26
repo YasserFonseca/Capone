@@ -20,6 +20,27 @@ export default function OnboardingSuccessPage() {
   const [qrCode, setQrCode]         = useState<string | null>(null);
   const [mpConnected, setMpConnected] = useState(false);
   const [loadingQr, setLoadingQr]   = useState(false);
+  const [inboxOpen, setInboxOpen]   = useState(false);
+  const [emailHtml, setEmailHtml]   = useState<string | null>(null);
+
+  // Busca o e-mail transacional mockado enviado
+  useEffect(() => {
+    if (!tenantId) return;
+    const fetchEmail = async () => {
+      try {
+        const res = await fetch(`/mock-emails/${tenantId}.html`);
+        if (res.ok) {
+          const html = await res.text();
+          setEmailHtml(html);
+        }
+      } catch (err) {
+        console.error('Erro ao ler e-mail de confirmação:', err);
+      }
+    };
+    fetchEmail();
+    const interval = setInterval(fetchEmail, 3000);
+    return () => clearInterval(interval);
+  }, [tenantId]);
 
   // Item 1: try sessionStorage first, fall back to Supabase auth session
   useEffect(() => {
@@ -192,6 +213,37 @@ export default function OnboardingSuccessPage() {
                 Acessar Dashboard →
               </button>
             </>
+          )}
+
+          {/* Caixa de Entrada Virtual Sandbox */}
+          {emailHtml && (
+            <div style={{ marginTop: '2.5rem', textAlign: 'left', background: 'rgba(26,18,36,0.3)', border: '1px solid rgba(157,78,221,0.15)', borderRadius: '16px', overflow: 'hidden' }}>
+              <button 
+                onClick={() => setInboxOpen(!inboxOpen)}
+                style={{ width: '100%', padding: '1.1rem 1.5rem', background: 'rgba(255,122,0,0.06)', border: 'none', color: '#fff', fontWeight: '700', fontSize: '0.95rem', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', outline: 'none' }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <span style={{ fontSize: '1.2rem', display: 'flex' }}>📬</span>
+                  Caixa de Entrada Virtual (Recibo Recebido!)
+                </span>
+                <span style={{ color: '#FF7A00', fontSize: '0.85rem', fontWeight: '600' }}>{inboxOpen ? 'Recolher ▲' : 'Visualizar E-mail ▼'}</span>
+              </button>
+
+              {inboxOpen && (
+                <div style={{ padding: '1.5rem', background: '#08080c' }} className="fade-in">
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.2rem', marginTop: 0 }}>
+                    Este é o e-mail de ativação transacional enviado para o seu endereço cadastrado com o recibo detalhado:
+                  </p>
+                  <div style={{ border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', background: '#08080c', height: '480px', overflow: 'hidden' }}>
+                    <iframe 
+                      srcDoc={emailHtml} 
+                      title="Recibo Capone" 
+                      style={{ width: '100%', height: '100%', border: 'none', borderRadius: '12px', background: '#08080c' }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </main>

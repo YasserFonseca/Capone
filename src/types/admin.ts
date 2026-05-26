@@ -13,6 +13,7 @@ export interface Tenant {
   mp_subscription_id: string | null
   next_billing_at:    string | null
   created_at:         string
+  plan?:              string
   segments?:          { name: string; slug: string }
   whatsapp_instances?: { status: WhatsappStatus; connected_at: string | null }
   platform_payments?: { amount: number; type: PaymentType }[]

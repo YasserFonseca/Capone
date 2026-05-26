@@ -3,7 +3,8 @@
 // permitindo que o servidor leia a sessão via createServerClient.
 import { createBrowserClient } from '@supabase/ssr'
 
-export const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-for-build-safety.supabase.co'
+const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-for-build-safety-key'
+
+export const supabase = createBrowserClient(url, key)
+

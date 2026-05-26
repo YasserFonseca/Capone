@@ -58,6 +58,7 @@
   letter-spacing: 1px;
   background: linear-gradient(90deg, #9d4edd, #c77dff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -533,4 +534,37 @@
   .sidebarMobileOpen {
     transform: translateX(0);
   }
+}
+
+/* ── Plan Badges ────────────────────────────────────────────── */
+.planBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.planBadge_starter {
+  background: rgba(138, 123, 156, 0.15);
+  color: #c77dff;
+  border: 1px solid rgba(138, 123, 156, 0.3);
+}
+
+.planBadge_pro {
+  background: rgba(201, 168, 76, 0.15);
+  color: #E8C97A;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.15);
+}
+
+.planBadge_elite {
+  background: linear-gradient(135deg, rgba(90, 24, 154, 0.2), rgba(157, 78, 221, 0.2));
+  color: #e0aaff;
+  border: 1px solid #7b2cbf;
+  box-shadow: 0 0 12px rgba(157, 78, 221, 0.25);
 }

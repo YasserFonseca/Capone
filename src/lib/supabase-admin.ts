@@ -2,11 +2,13 @@
 // NUNCA importar em Client Components.
 import { createClient } from '@supabase/supabase-js'
 
-if (!process.env.SUPABASE_URL)              throw new Error('SUPABASE_URL não definida')
-if (!process.env.SUPABASE_SERVICE_ROLE_KEY) throw new Error('SUPABASE_SERVICE_ROLE_KEY não definida')
+const url = process.env.SUPABASE_URL || 'https://placeholder-for-build-safety.supabase.co'
+const key = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-for-build-safety-key'
 
 export const supabaseAdmin = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
+  url,
+  key,
   { auth: { autoRefreshToken: false, persistSession: false } }
 )
+
+

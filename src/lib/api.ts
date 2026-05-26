@@ -25,6 +25,7 @@ export interface CheckoutPayload {
   ownerEmail:  string
   ownerName:   string
   formData:    Record<string, string>
+  plan:        string
 }
 
 export interface CheckoutResponse {
@@ -59,5 +60,5 @@ export async function refreshQrCode(tenantId: string): Promise<{ qrCode: string 
 }
 
 export function getMpOAuthUrl(tenantId: string): string {
-  return `${BACKEND_URL}/payments/oauth/connect?tenantId=${tenantId}`
+  return `/api/payments/oauth/connect?tenantId=${tenantId}`
 }

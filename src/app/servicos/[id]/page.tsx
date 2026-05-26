@@ -126,10 +126,18 @@ export default function ServicoForm({ params }: { params: { id: string } }) {
   const [hours, setHours]             = useState<Record<string, HoursDay>>(defaultHours())
   const [services, setServices]       = useState<ServiceItem[]>([{ name: '', price: '', duration: '30' }])
   const [professionals, setProfessionals] = useState<string[]>([''])
+  const [selectedPlan, setSelectedPlan]   = useState<string>('pro')
 
   const [loading, setLoading]     = useState(false)
   const [error, setError]         = useState('')
   const [submitted, setSubmitted] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const p = sessionStorage.getItem('selectedPlan') ?? 'pro'
+      setSelectedPlan(p)
+    }
+  }, [])
 
   useEffect(() => {
     // Fetch segment by route_id from DB, fall back to slug-based lookup
@@ -186,7 +194,13 @@ export default function ServicoForm({ params }: { params: { id: string } }) {
   const setService    = (i: number, f: keyof ServiceItem, v: string) =>
     setServices(p => p.map((s, idx) => idx === i ? { ...s, [f]: v } : s))
 
-  const addProf    = () => setProfessionals(p => [...p, ''])
+  const addProf    = () => {
+    if ((selectedPlan === 'starter' || selectedPlan === 'pro') && professionals.length >= 1) {
+      alert(`O seu plano (${selectedPlan.toUpperCase()}) é limitado a no máximo 1 profissional. Para ter profissionais ilimitados, escolha o plano ELITE!`)
+      return
+    }
+    setProfessionals(p => [...p, ''])
+  }
   const removeProf = (i: number) => setProfessionals(p => p.filter((_, idx) => idx !== i))
   const setProf    = (i: number, v: string) =>
     setProfessionals(p => p.map((x, idx) => idx === i ? v : x))
@@ -229,9 +243,10 @@ export default function ServicoForm({ params }: { params: { id: string } }) {
         ownerEmail:  user.email!,
         ownerName:   user.user_metadata?.full_name ?? user.email!,
         formData:    buildFormData(),
+        plan:        selectedPlan,
       })
       sessionStorage.setItem('pendingTenantId', tenantId)
-      window.location.href = checkoutUrl
+      router.push(`/checkout/${tenantId}`)
     } catch (err) {
       setError((err as Error).message ?? 'Erro ao iniciar checkout. Tente novamente.')
     } finally {
@@ -290,6 +305,12 @@ export default function ServicoForm({ params }: { params: { id: string } }) {
           <div className={`${styles.formSection} fade-in`} style={{ animationDelay: '0.3s' }}>
             <h3>Configure sua Automacao</h3>
             <p className={styles.formIntro}>Essas informacoes treinam o bot para atender exatamente como o seu negocio funciona.</p>
+            {selectedPlan === 'starter' && (
+              <div style={{ padding: '1rem', background: 'rgba(192, 57, 43, 0.15)', border: '1px solid #ff4d4d', borderRadius: '12px', marginBottom: '1.5rem' }}>
+                <p style={{ color: '#ff4d4d', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '4px' }}>⚠️ Plano STARTER selecionado</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Este plano NÃO inclui pagamento integrado via Mercado Pago. O bot cuidará exclusivamente de tirar dúvidas (FAQ) e registrar agendamentos.</p>
+              </div>
+            )}
 
             {error && <div className={styles.errorBanner}>{error}</div>}
 
@@ -382,6 +403,11 @@ export default function ServicoForm({ params }: { params: { id: string } }) {
                   4. {profLabel}{' '}
                   <span style={{ color: 'var(--text-muted)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(opcional)</span>
                 </p>
+                {(selectedPlan === 'starter' || selectedPlan === 'pro') && (
+                  <p style={{ color: '#E8C97A', fontSize: '0.8rem', marginBottom: '0.75rem', fontWeight: 500 }}>
+                    ℹ️ Seu plano ({selectedPlan.toUpperCase()}) é limitado a 1 profissional.
+                  </p>
+                )}
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.83rem', marginBottom: '1rem' }}>
                   O bot vai informar os profissionais disponiveis e permitir que o cliente escolha.
                 </p>
