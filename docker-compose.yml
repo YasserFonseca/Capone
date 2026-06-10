@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  evolution-api:
+    image: evolutionapis/evolution-api:latest
+    container_name: evolution_api
+    restart: always
+    ports:
+      - "8056:8056"
+    environment:
+      - SERVER_PORT=8056
+      - SERVER_URL=http://localhost:8056
+      - API_KEY=429683C4C977415CAAFCCE10F7D57E11
+      - AUTHENTICATION_TYPE=apikey
+      
+      # Persistência local simples via SQLite para desenvolvimento
+      - DATABASE_ENABLED=true
+      - DATABASE_CONNECTION_CLIENT=sqlite
+      - DATABASE_CONNECTION_USE_NULL_AS_DEFAULT=true
+      
+      # Configurações do serviço de WhatsApp (Baileys)
+      - CORS_ORIGIN=*
+      - CORS_METHODS=GET,POST,PUT,DELETE
+      - CORS_HEADERS=Content-Type,Authorization,apikey
+      
+      # Logs
+      - LOG_LEVEL=error,warn,info
+    volumes:
+      - evolution_data:/evolution/instances
+
+volumes:
+  evolution_data:

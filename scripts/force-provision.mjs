@@ -1,12 +1,35 @@
-// Script temporário para forçar tenant active + provisionar WhatsApp
-// Uso: node scripts/force-provision.mjs
 import { createClient } from '@supabase/supabase-js'
+import fs from 'fs'
+import path from 'path'
 
-const SUPABASE_URL     = 'https://ucfnhmpilohwkdjibczs.supabase.co'
-const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjZm5obXBpbG9od2tkamliY3pzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODQ4MDMwOCwiZXhwIjoyMDk0MDU2MzA4fQ.q36mQ_vNQ7XJAFbvY3Uw1laxqm4JhKpYNL70p3F-oAc'
-const EVOLUTION_URL    = 'https://evolution-api-production-7f59.up.railway.app'
-const EVOLUTION_KEY    = '429683C4C977415CAAFCCE10F7D57E11'
-const APP_URL          = 'http://localhost:3000'
+// Carregador simples e nativo de variáveis do .env.local
+function loadEnv() {
+  const envPath = path.join(process.cwd(), '.env.local')
+  const envs = {}
+  if (fs.existsSync(envPath)) {
+    const content = fs.readFileSync(envPath, 'utf8')
+    content.split(/\r?\n/).forEach(line => {
+      const trimmed = line.trim()
+      if (trimmed && !trimmed.startsWith('#')) {
+        const idx = trimmed.indexOf('=')
+        if (idx !== -1) {
+          const key = trimmed.substring(0, idx).trim()
+          const val = trimmed.substring(idx + 1).trim()
+          envs[key] = val
+        }
+      }
+    })
+  }
+  return envs
+}
+
+const env = loadEnv()
+
+const SUPABASE_URL     = env.NEXT_PUBLIC_SUPABASE_URL || 'https://ucfnhmpilohwkdjibczs.supabase.co'
+const SERVICE_ROLE_KEY = env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVjZm5obXBpbG9od2tkamliY3pzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODQ4MDMwOCwiZXhwIjoyMDk0MDU2MzA4fQ.q36mQ_vNQ7XJAFbvY3Uw1laxqm4JhKpYNL70p3F-oAc'
+const EVOLUTION_URL    = env.EVOLUTION_API_URL || 'https://evolution-api-production-7f59.up.railway.app'
+const EVOLUTION_KEY    = env.EVOLUTION_API_KEY || '429683C4C977415CAAFCCE10F7D57E11'
+const APP_URL          = env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 const TARGET_EMAIL     = 'yasserguns@gmail.com'
 
 const db = createClient(SUPABASE_URL, SERVICE_ROLE_KEY)
