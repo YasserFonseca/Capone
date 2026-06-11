@@ -8,6 +8,7 @@ import { Mail, Lock } from 'lucide-react';
 import styles from '@/app/styles/Auth.module.css';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
+import { loginUser } from '@/app/actions/auth';
 
 export default function LoginPage() {
   const { showToast } = useCart();
@@ -15,10 +16,11 @@ export default function LoginPage() {
 
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: '', password: '' });
+  const [isPending, setIsPending] = useState(false);
 
   const validate = () => {
     let valid = true;
-    let newErrors = { email: '', password: '' };
+    const newErrors = { email: '', password: '' };
 
     if (!formData.email) {
       newErrors.email = 'E-mail é obrigatório.';
@@ -37,11 +39,29 @@ export default function LoginPage() {
     return valid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
-      showToast('Login efetuado com sucesso!');
-      router.push('/');
+    if (!validate()) return;
+
+    setIsPending(true);
+    try {
+      const response = await loginUser({ email: formData.email, password: formData.password });
+      if (response.success) {
+        showToast(response.message);
+        router.push('/');
+      } else {
+        showToast(response.message);
+        if (response.errors) {
+          setErrors(prev => ({
+            ...prev,
+            ...response.errors
+          }));
+        }
+      }
+    } catch {
+      showToast('Ocorreu um erro ao conectar-se ao servidor seguro.');
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -64,13 +84,13 @@ export default function LoginPage() {
                 <div className={styles.inputWrapper}>
                   <Mail className={styles.inputIcon} size={20} />
                   <input 
-                    type="email" 
-                    id="email" 
-                    className={`${styles.input} ${errors.email ? styles.error : ''}`}
-                    placeholder="voce@empresa.com"
-                    maxLength={100}
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                     type="email" 
+                     id="email" 
+                     className={`${styles.input} ${errors.email ? styles.error : ''}`}
+                     placeholder="voce@empresa.com"
+                     maxLength={100}
+                     value={formData.email}
+                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                   />
                 </div>
                 {errors.email && <span className={styles.errorText}>{errors.email}</span>}
@@ -81,20 +101,20 @@ export default function LoginPage() {
                 <div className={styles.inputWrapper}>
                   <Lock className={styles.inputIcon} size={20} />
                   <input 
-                    type="password" 
-                    id="password" 
-                    className={`${styles.input} ${errors.password ? styles.error : ''}`}
-                    placeholder="••••••••"
-                    maxLength={50}
-                    value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                     type="password" 
+                     id="password" 
+                     className={`${styles.input} ${errors.password ? styles.error : ''}`}
+                     placeholder="••••••••"
+                     maxLength={50}
+                     value={formData.password}
+                     onChange={(e) => setFormData({...formData, password: e.target.value})}
                   />
                 </div>
                 {errors.password && <span className={styles.errorText}>{errors.password}</span>}
               </div>
 
-              <button type="submit" className={styles.submitBtn}>
-                Entrar no Sistema
+              <button type="submit" className={styles.submitBtn} disabled={isPending}>
+                {isPending ? 'Verificando segurança...' : 'Entrar no Sistema'}
               </button>
 
             </form>

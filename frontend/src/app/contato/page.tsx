@@ -1,19 +1,72 @@
 'use client';
 
+import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import styles from './Contato.module.css';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { submitContactForm } from '@/app/actions/contact';
 
 export default function ContatoPage() {
   const { showToast } = useCart();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [errors, setErrors] = useState({ name: '', email: '', message: '' });
+  const [isPending, setIsPending] = useState(false);
+
+  const validate = () => {
+    let valid = true;
+    const newErrors = { name: '', email: '', message: '' };
+
+    if (!formData.name || formData.name.length < 2) {
+      newErrors.name = 'Nome deve ter pelo menos 2 caracteres.';
+      valid = false;
+    }
+
+    if (!formData.email) {
+      newErrors.email = 'E-mail é obrigatório.';
+      valid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'E-mail em formato inválido.';
+      valid = false;
+    }
+
+    if (!formData.message || formData.message.length < 5) {
+      newErrors.message = 'A mensagem deve ter pelo menos 5 caracteres.';
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    showToast('Mensagem enviada com sucesso! Em breve retornaremos o contato.');
-    const form = e.target as HTMLFormElement;
-    form.reset();
+    if (!validate()) return;
+
+    setIsPending(true);
+    try {
+      const response = await submitContactForm({
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      });
+
+      if (response.success) {
+        showToast(response.message);
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        showToast(response.message);
+        if (response.errors) {
+          setErrors(prev => ({ ...prev, ...response.errors }));
+        }
+      }
+    } catch {
+      showToast('Erro ao conectar-se ao servidor de mensagens.');
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
@@ -63,18 +116,44 @@ export default function ContatoPage() {
               <form onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>
                   <label className={styles.label} htmlFor="nome">Seu Nome</label>
-                  <input type="text" id="nome" name="nome" className={styles.input} required />
+                  <input 
+                    type="text" 
+                    id="nome" 
+                    name="nome" 
+                    className={`${styles.input} ${errors.name ? styles.error : ''}`}
+                    maxLength={100}
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  />
+                  {errors.name && <span style={{ color: '#ff4d4d', fontSize: '0.85rem', marginTop: '0.25rem', display: 'block' }}>{errors.name}</span>}
                 </div>
                 <div className={styles.formGroup}>
                   <label className={styles.label} htmlFor="email">Seu E-mail</label>
-                  <input type="email" id="email" name="email" className={styles.input} required />
+                  <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    className={`${styles.input} ${errors.email ? styles.error : ''}`}
+                    maxLength={100}
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                  {errors.email && <span style={{ color: '#ff4d4d', fontSize: '0.85rem', marginTop: '0.25rem', display: 'block' }}>{errors.email}</span>}
                 </div>
                 <div className={styles.formGroup}>
                   <label className={styles.label} htmlFor="mensagem">Como podemos ajudar?</label>
-                  <textarea id="mensagem" name="mensagem" className={styles.textarea} required></textarea>
+                  <textarea 
+                    id="mensagem" 
+                    name="mensagem" 
+                    className={`${styles.textarea} ${errors.message ? styles.error : ''}`}
+                    maxLength={1000}
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  ></textarea>
+                  {errors.message && <span style={{ color: '#ff4d4d', fontSize: '0.85rem', marginTop: '0.25rem', display: 'block' }}>{errors.message}</span>}
                 </div>
-                <button type="submit" className={styles.submitBtn}>
-                  Enviar Mensagem
+                <button type="submit" className={styles.submitBtn} disabled={isPending}>
+                  {isPending ? 'Enviando com segurança...' : 'Enviar Mensagem'}
                 </button>
               </form>
             </div>
@@ -85,3 +164,4 @@ export default function ContatoPage() {
     </>
   );
 }
+

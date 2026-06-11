@@ -8,6 +8,7 @@ import { User, Mail, Lock } from 'lucide-react';
 import styles from '@/app/styles/Auth.module.css';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
+import { registerUser } from '@/app/actions/auth';
 
 export default function RegistroPage() {
   const { showToast } = useCart();
@@ -15,6 +16,7 @@ export default function RegistroPage() {
 
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [errors, setErrors] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [isPending, setIsPending] = useState(false);
 
   // Calculate Password Strength
   const calculateStrength = (pass: string) => {
@@ -49,7 +51,7 @@ export default function RegistroPage() {
 
   const validate = () => {
     let valid = true;
-    let newErrors = { name: '', email: '', password: '', confirmPassword: '' };
+    const newErrors = { name: '', email: '', password: '', confirmPassword: '' };
 
     if (!formData.name || formData.name.length < 3) {
       newErrors.name = 'Nome deve ter pelo menos 3 caracteres.';
@@ -78,11 +80,34 @@ export default function RegistroPage() {
     return valid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
-      showToast('Conta criada com sucesso! Bem-vindo à Capone.');
-      router.push('/');
+    if (!validate()) return;
+
+    setIsPending(true);
+    try {
+      const response = await registerUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      });
+
+      if (response.success) {
+        showToast(response.message);
+        router.push('/');
+      } else {
+        showToast(response.message);
+        if (response.errors) {
+          setErrors(prev => ({
+            ...prev,
+            ...response.errors
+          }));
+        }
+      }
+    } catch {
+      showToast('Ocorreu um erro ao conectar-se ao servidor seguro.');
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -179,8 +204,8 @@ export default function RegistroPage() {
                 {errors.confirmPassword && <span className={styles.errorText}>{errors.confirmPassword}</span>}
               </div>
 
-              <button type="submit" className={styles.submitBtn}>
-                Criar Minha Conta
+              <button type="submit" className={styles.submitBtn} disabled={isPending}>
+                {isPending ? 'Validando e registrando...' : 'Criar Minha Conta'}
               </button>
 
             </form>
